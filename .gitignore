@@ -1,0 +1,5 @@
+.paket/Paket.Restore.targets
+paket-files/
+packages/
+bin/
+*.swp
