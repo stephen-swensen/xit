@@ -72,7 +72,7 @@ let ok_txt (f:HttpContext->'a) =
 
 let ok_txt_n (f:HttpContext->'a) =
     fun ctx -> 
-        let [Int n] = opt ctx "n" |? ["1"]
+        let (Int n::_) = opt ctx "n" |? ["1"]
         let r =
             [for x in 1..n -> (f ctx).ToString()]
             |> String.concat "\n"
@@ -86,6 +86,12 @@ let app =
         path "/random" >=> ok_txt_n (fun ctx -> Random().Next())
         path "/now" >=> ok_txt_n (fun ctx -> DateTime.UtcNow)
         path "/echo" >=> ok_txt_n content
+        path "/wc" >=> ok_txt (fun ctx ->
+            let input = content ctx
+            let lines = input |> Seq.filter (fun c -> c = '\n') |> Seq.length 
+            let words = input.Split([|' '; '\n'|], StringSplitOptions.RemoveEmptyEntries) |> Seq.length
+            let letters = input.Length
+            sprintf "%i\t%i\t%i" lines words letters)
     ]
 
 let publicBinding = Suave.Http.HttpBinding.createSimple HTTP "0.0.0.0" 9123
