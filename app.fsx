@@ -26,6 +26,6 @@ let app =
         path "/now" >=> ok_txt (fun ctx -> DateTime.UtcNow)
     ]
 
-let publicBinding = Suave.Http.HttpBinding.createSimple HTTP "0.0.0.0" 8080
+let publicBinding = Suave.Http.HttpBinding.createSimple HTTP "0.0.0.0" 9123
 let config = { defaultConfig with bindings = [publicBinding]; maxOps=1000 }
 startWebServer config app
